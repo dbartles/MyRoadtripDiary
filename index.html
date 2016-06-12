@@ -1,4 +1,4 @@
-<html>
+ <html>
 
 <head>
     <meta charset="utf-8">
@@ -73,9 +73,6 @@
             padding: 8px 15px;
             font-size: 1em;
             padding: 8px 15px 8px 15px;
-            /*            background: whitesmoke, 1;*/
-            /*            box-shadow: whitesmoke, 1;*/
-            /*            color: black;*/
             background: whitesmoke;
             box-shadow: 0 0 15px whitesmoke;
             border-radius: 3px;
@@ -90,7 +87,6 @@
             margin: 0;
             font-size: 1.3em;
             background: whitesmoke, 1;
-            /*            font: 'Ubuntu', sans-serif;*/
             font-weight: 700;
             color: black;
         }
@@ -101,7 +97,6 @@
             font-size: 1.5em;
             font-weight: 900;
             color: black;
-            /*            font: 'Ubuntu', sans-serif;*/
         }
         
         .current {
@@ -132,7 +127,6 @@
             float: right;
             color: whitesmoke;
         }
-        /*        add the year-slider element*/
         
         .year-slider {
             width: 100%;
@@ -202,13 +196,12 @@
         .leaflet-overlay-pane path {
             transition: stroke .8s;
         }
-        /* For this slider, disable the 'origin' size. */
         
+/*
         #connect .noUi-origin {
             right: auto;
             width: 0;
         }
-        /* Position the bar and color it. */
         
         #connect .connect {
             position: absolute;
@@ -217,13 +210,13 @@
             background: #80C9F5;
             box-shadow: inset 0 0 3px rgba(51, 51, 51, 0.45);
         }
-        /* When the slider is moved by tap,
-   transition the connect bar like the handle. */
+
         
         #connect.noUi-state-tap .connect {
             -webkit-transition: left 300ms, right 300ms;
             transition: left 300ms, right 300ms;
         }
+*/
     </style>
 </head>
 
@@ -249,19 +242,17 @@
 
         <div id='info'></div>
 
-        <!--            need to add a info box here that shows the current highlighted year-->
-
     </div>
 
     <div id='ui-controls'>
         <label>
-            <!-- In <body> -->
+
             <script src="nouislider.min.js"></script>
             <div id='connect'></div>
-
-
+            
             <span class="min">1986</span><span class="max">2016</span>
             <input type="range" min="1986" , max="2016" , value="1986" , step="1" , class="year-slider">
+        
         </label>
     </div>
 
@@ -313,28 +304,6 @@
 
         var attribute = "1986" // set a default attribute where the slider starts
 
-
-
-        //            var labels = {
-        //                    "YEAR": "YEAR"
-        //                    , "2000": "2000"
-        //                    , "2001": "2001"
-        //                    , "2002": "2002"
-        //                    , "2003": "2003"
-        //                    , "2004": "2004"
-        //                    , "2005": "2005"
-        //                    , "2006": "2006"
-        //                    , "2007": "2007"
-        //                    , "2008": "2008"
-        //                    , "2009": "2009"
-        //                    , "2010": "2010"
-        //                    , "2011": "2011"
-        //                    , "2012": "2012"
-        //                    , "2013": "2013"
-        //                }
-        // Make a leaflet map with data here (including popups)
-
-
         var options = {
             center: [37.6, -85.3]
             , zoom: 5
@@ -347,14 +316,6 @@
 
         map.setView([lat, lng], zoom);
 
-        // would prefer to use the mapbox base layer
-        //        var MapQuestOpen_OSM = L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/{type}/{z}/{x}/{y}.{ext}', {
-        //            type: 'map'
-        //            , ext: 'jpg'
-        //            , attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        //            , subdomains: '1234'
-        //        }).addTo(map);
-
         var MapBoxTiles_devin = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>'
             , maxZoom: 18
@@ -363,7 +324,7 @@
         }).addTo(map);
 
 
-        // custom zoom bar control that includes a Zoom Home function
+        // custom zoom bar control that includes a Zoom Home and a zoom to Canada, America, and Argentina function
         L.Control.zoomHome = L.Control.extend({
             options: {
                 position: 'bottomright'
@@ -548,18 +509,16 @@
             , ]
         };
 
-        console.log(myHomes.homes.name);
-
+//        loop through the json object to create popup markers
         for (homes in myHomes.homes) {
             //            console.log(myHomes.homes[homes].Name);
             var popupDesc = myHomes.homes[homes].Description
             var popupName = myHomes.homes[homes].Name
             var popupHTML = "<h2>Home Location: " + popupName + "<h3>" + popupDesc
             L.marker([myHomes.homes[homes].Lat, myHomes.homes[homes].Lng]).addTo(map).bindPopup(popupHTML);
-            //            L.marker([myHomes.Lat, myHomes.Lng]).addTo(map);
         };
 
-        //        L.marker([40, -105]).addTo(map);
+
 
         var dataLayer, attribute = "year";
 
@@ -572,7 +531,6 @@
                 style: function (feature) {
 
                     return {
-                        //                        color: '#949494'
                         color: '#5258F9'
                         , opacity: 1
                         , weight: 5
@@ -580,34 +538,14 @@
                 }
             }).addTo(map);
 
-
-            //                Do the same as above for the second dataset. This doesnt appear to be working correctly.
-            //            dataLayer2 = L.geoJson(roadssample, {
-            //                style: function (feature) {
-            //                    return {
-            ////                        color: '#949494'
-            //                        color: '#5258F9'
-            //                        , opacity: 1
-            //                        , weight: 5
-            //                    }
-            //                }
-            //            }).addTo(map);
-
-
             dataLayer.bringToFront();
 
             drawInfo();
             drawCurrent();
 
-
-            //                need to add a mouseover listener here to show information about trips that are being hovered over
-
-
-
         };
 
         function changeStyle() {
-            //            drawCurrent();
 
             dataLayer.eachLayer(function (layer) {
                 console.log(layer.feature.properties.year);
@@ -633,17 +571,11 @@
 
         } // end changeStyle
 
-
-
-
-        //!!!add slider bar
-
+        
         drawfeatures();
         createSliderUI();
 
-
-
-
+        
         function createSliderUI() {
             // create a Leaflet control object and store a reference to it in a variable
             var sliderControl = L.control({
@@ -677,29 +609,12 @@
 
                     attribute = $(this).val();
                     changeStyle();
-                    //                    updateInfo(this);
-
-                    console.log(attribute);
-
-                    //                    updateInfo(attribute);
-
-                    //                    attribute = layer.feature.properties.year;
-
-                    //                    layer.setStyle({
-                    //                        color: 'yellow'
-                    //                        , weight: 2
-                    //                        , opacity: 1
-                    //
-                    //                    })
-                    //                    layer.bringToFront();
 
                     var html3 = "Year: " + attribute
 
                     $(".current").html(html3);
 
-
                     $(".year-slider").val(attribute);
-
 
                 });
 
@@ -716,15 +631,11 @@
                 return div;
             };
 
-
-
-
             info.addTo(map);
             $(".info").hide();
 
             dataLayer.eachLayer(function (layer) {
                 layer.on('mouseover', function () {
-
 
                     updateInfo(this);
 
@@ -737,15 +648,13 @@
 
                     })
                     layer.bringToFront();
-
-
+                    
                     $(".year-slider").val(attribute);
 
                 });
 
                 layer.on('mouseout', function () {
                     layer.setStyle({
-                        //                        color: '#949494'
                         color: '#5258F9'
                         , weight: 4
                         , opacity: 1
@@ -763,31 +672,21 @@
 
         }
 
-        //        functin for drawing current year
+
         function drawCurrent() {
             var current = L.control({
                 position: 'bottomright'
             , });
-
-
-
-
 
             current.onAdd = function (map) {
                 var div = L.DomUtil.create('div', 'current')
                 return div;
             };
 
-
-
-
             current.addTo(map);
-            //                        $(".current").hide();
 
             $(".current").html("Year: 1986");
             dataLayer.eachLayer(function (layer) {
-
-
 
                 layer.on('mouseover', function () {
 
@@ -834,10 +733,6 @@
 
             var props = feature.feature.properties.comment;
 
-            //            console.log(props);
-
-            //            console.log(props);
-
             var html = "<h3>" + "Year: " + feature.feature.properties.year + "<br>Start: " + feature.feature.properties.end + "<br> End: " + feature.feature.properties.start + "</h3><h4>" + props
 
             var html2 = "Year: " + feature.feature.properties.year
@@ -853,15 +748,8 @@
 
             })
 
-
         }
 
-
-
-
-        //!!!update csv content
-
-        //!!!add mouse over labels (or update side bar)
     </script>
 </body>
 
