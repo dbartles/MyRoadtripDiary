@@ -1,0 +1,868 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Roads I've Travelled</title>
+
+    <!-- In <head> -->
+    <link href="nouislider.min.css" rel="stylesheet">
+
+    <!--    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">-->
+
+
+    <script src='https://api.mapbox.com/mapbox.js/v2.2.4/mapbox.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css' rel='stylesheet' />
+
+    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+
+    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-statistics/0.9.0/simple_statistics.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/1.10.0/d3-legend.min.js"></script>
+
+    <script src="//d3js.org/d3.v3.min.js"></script>
+    <script src="d3.geo.tile.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 67%;
+            background: whitesmoke;
+            font-family: "Ubuntu", sans-serif;
+            color: black;
+        }
+        
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        .leaflet-bar a {
+            background-color: #fff;
+            border-bottom: 1px solid #ccc;
+            color: #444;
+            display: block;
+            height: 26px;
+            width: 105px;
+            line-height: 1.45 !important;
+            text-align: center;
+            text-decoration: none;
+            font: bold 18px 'Ubuntu', sans-serif;
+        }
+        
+        .info {
+            padding: 8px 15px;
+            font-size: 1em;
+            padding: 8px 15px 8px 15px;
+            /*            background: whitesmoke, 1;*/
+            /*            box-shadow: whitesmoke, 1;*/
+            /*            color: black;*/
+            background: whitesmoke;
+            box-shadow: 0 0 15px whitesmoke;
+            border-radius: 3px;
+            text-align: center;
+            max-width: 80%;
+            font: "Ubuntu", sans-serif;
+            font-weight: 700;
+            color: black;
+        }
+        
+        .info h3 {
+            margin: 0;
+            font-size: 1.3em;
+            background: whitesmoke, 1;
+            /*            font: 'Ubuntu', sans-serif;*/
+            font-weight: 700;
+            color: black;
+        }
+        
+        .info h4 {
+            margin: 0;
+            color: whitesmoke;
+            font-size: 1.5em;
+            font-weight: 900;
+            color: black;
+            /*            font: 'Ubuntu', sans-serif;*/
+        }
+        
+        .current {
+            padding: 8px 15px;
+            font-size: 1.5em;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+            text-align: right;
+            max-width: 300px;
+        }
+        
+        .current h3 {
+            margin: 0;
+            font-size: 0.8em
+        }
+        
+        #ui-controls {
+            position: absolute;
+            right: 0%;
+            bottom: 56%;
+            width: 25.5%;
+            padding: 8px 15px 8px 15px;
+            background: rgba(75, 75, 75, 0.8);
+            box-shadow: 0 0 0px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            float: right;
+            color: whitesmoke;
+        }
+        /*        add the year-slider element*/
+        
+        .year-slider {
+            width: 100%;
+        }
+        
+        #ui-controls .min {
+            float: left;
+        }
+        
+        #ui-controls .max {
+            float: right;
+        }
+        
+        #side-panel {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 470;
+            width: 28%;
+            background: whitesmoke;
+            border-left: 2px solid black;
+            border-bottom: 2px solid black;
+            overflow-y: scroll;
+        }
+        
+        h1 {
+            padding: 8px 25px 8px 15px;
+            margin: 0;
+            background: #33CC99;
+            color: black;
+            font-weight: 900;
+            font-size: 1.7em;
+            text-align: center;
+        }
+        
+        h2 {
+            margin: 0;
+            padding: 8px 25px 8px 15px;
+            color: black;
+            background: whitesmoke;
+            font-weight: 700;
+            font-size: 1.2em;
+            text-align: center;
+        }
+        
+        #side-panel p {
+            margin: 8px 0 4px;
+            padding: 0 25px 0 15px;
+            color: #677077;
+            text-align: center;
+            font-size: 0.9em;
+            font-weight: 400;
+            bottom: 5%;
+        }
+        
+        #side-panel p:after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+        
+        #side-panel img {
+            float: right;
+            margin: 0 0 15px 15px;
+        }
+        
+        .leaflet-overlay-pane path {
+            transition: stroke .8s;
+        }
+        /* For this slider, disable the 'origin' size. */
+        
+        #connect .noUi-origin {
+            right: auto;
+            width: 0;
+        }
+        /* Position the bar and color it. */
+        
+        #connect .connect {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            background: #80C9F5;
+            box-shadow: inset 0 0 3px rgba(51, 51, 51, 0.45);
+        }
+        /* When the slider is moved by tap,
+   transition the connect bar like the handle. */
+        
+        #connect.noUi-state-tap .connect {
+            -webkit-transition: left 300ms, right 300ms;
+            transition: left 300ms, right 300ms;
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <div id='map'></div>
+
+
+
+
+
+    <div id='side-panel'>
+
+
+
+
+        <h1>My Roadtrip Diary</h1>
+        <h2>An interactive web map</h2>
+        <p>This map is a spatial diary of various routes over land that I have travelled by car and bus. These road trips provide a good glimpse into my personal background and experiences that have shaped me over the course of my life. </p>
+        <p>Use the slider bar below to highlight which year I have travelled certain roadways. Moving your mouse over roads will show you more information about a particular trip.</p>
+        <div id='current'></div>
+
+        <div id='info'></div>
+
+        <!--            need to add a info box here that shows the current highlighted year-->
+
+    </div>
+
+    <div id='ui-controls'>
+        <label>
+            <!-- In <body> -->
+            <script src="nouislider.min.js"></script>
+            <div id='connect'></div>
+
+
+            <span class="min">1986</span><span class="max">2016</span>
+            <input type="range" min="1986" , max="2016" , value="1986" , step="1" , class="year-slider">
+        </label>
+    </div>
+
+    <script src="routes.geojson" type="text/javascript"></script>
+    <script src="roadssample.geojson" type="text/javascript"></script>
+
+    <script>
+
+
+        //        var connectSlider = document.getElementById('connect');
+        //
+        //        noUiSlider.create(connectSlider, {
+        //            start: [1986, 2016]
+        //            , connect: true
+        //            , step: 1
+        //            , range: {
+        //                'min': 1986
+        //                , 'max': 2016
+        //            }
+        //        });
+        //
+        //        var connectBar = document.createElement('div')
+        //            , connectBase = connectSlider.querySelector('.noUi-base');
+        //
+        //        // Give the bar a class for styling and add it to the slider.
+        //        connectBar.className += 'connect';
+        //        connectBase.appendChild(connectBar);
+        //
+        //
+        //
+        //        var positionsStepped = document.getElementById('pips-positions-stepped');
+        //
+        //        var range_all_sliders = {
+        //            'min': [1986]
+        //            , '10%': [1989]
+        //            , '50%': [1995, 2010]
+        //            , 'max': [2016]
+        //        };
+
+        var lat = 37.6;
+        var lng = -95.3;
+        var zoom = 5;
+
+
+
+
+
+
+
+        var attribute = "1986" // set a default attribute where the slider starts
+
+
+
+        //            var labels = {
+        //                    "YEAR": "YEAR"
+        //                    , "2000": "2000"
+        //                    , "2001": "2001"
+        //                    , "2002": "2002"
+        //                    , "2003": "2003"
+        //                    , "2004": "2004"
+        //                    , "2005": "2005"
+        //                    , "2006": "2006"
+        //                    , "2007": "2007"
+        //                    , "2008": "2008"
+        //                    , "2009": "2009"
+        //                    , "2010": "2010"
+        //                    , "2011": "2011"
+        //                    , "2012": "2012"
+        //                    , "2013": "2013"
+        //                }
+        // Make a leaflet map with data here (including popups)
+
+
+        var options = {
+            center: [37.6, -85.3]
+            , zoom: 5
+            , dragging: true
+            , zoomControl: false
+        }
+
+
+        var map = L.map('map', options);
+
+        map.setView([lat, lng], zoom);
+
+        // would prefer to use the mapbox base layer
+        //        var MapQuestOpen_OSM = L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/{type}/{z}/{x}/{y}.{ext}', {
+        //            type: 'map'
+        //            , ext: 'jpg'
+        //            , attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        //            , subdomains: '1234'
+        //        }).addTo(map);
+
+        var MapBoxTiles_devin = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>'
+            , maxZoom: 18
+            , id: 'mapbox.streets'
+            , accessToken: 'pk.eyJ1IjoiZGJhcnRsZXkiLCJhIjoiY2lwYnJjb3drMDA3aXNubTd4MmtzYXN5cyJ9.SuTq31wTJwyVb37BXVadxQ'
+        }).addTo(map);
+
+
+        // custom zoom bar control that includes a Zoom Home function
+        L.Control.zoomHome = L.Control.extend({
+            options: {
+                position: 'bottomright'
+                , zoomInText: '+'
+                , zoomInTitle: 'Zoom in'
+                , zoomOutText: '-'
+                , zoomOutTitle: 'Zoom out'
+                , zoomHomeText: 'America'
+                , zoomHomeTitle: 'Zoom home'
+                , zoomCanadaText: 'Canada'
+                , zoomCanadaTitle: 'Zoom Canada'
+                , zoomSamericaText: 'Argentina'
+                , zoomSamericaTitle: 'Zoom S America'
+            },
+
+            onAdd: function (map) {
+                var controlName = 'gin-control-zoom'
+                    , container = L.DomUtil.create('div', controlName + ' leaflet-bar')
+                    , options = this.options;
+
+                this._zoomInButton = this._createButton(options.zoomInText, options.zoomInTitle
+                    , controlName + '-in', container, this._zoomIn);
+                this._zoomHomeButton = this._createButton(options.zoomHomeText, options.zoomHomeTitle
+                    , controlName + '-home', container, this._zoomHome);
+                this._zoomCanadaButtom = this._createButton(options.zoomCanadaText, options.zoomHomeTitle
+                    , controlName + '-canada', container, this._zoomCanada);
+                this.zoomSamericaButton =
+                    this._createButton(options.zoomSamericaText, options.zoomHomeTitle
+                        , controlName + '-Samerica', container, this._zoomSamerica);
+                this._zoomOutButton = this._createButton(options.zoomOutText, options.zoomOutTitle
+                    , controlName + '-out', container, this._zoomOut);
+
+                this._updateDisabled();
+                map.on('zoomend zoomlevelschange', this._updateDisabled, this);
+
+                return container;
+            },
+
+            onRemove: function (map) {
+                map.off('zoomend zoomlevelschange', this._updateDisabled, this);
+            },
+
+            _zoomIn: function (e) {
+                this._map.zoomIn(e.shiftKey ? 3 : 1);
+            },
+
+            _zoomOut: function (e) {
+                this._map.zoomOut(e.shiftKey ? 3 : 1);
+            },
+
+            _zoomHome: function (e) {
+                map.setView([lat, lng], 5);
+            },
+
+            _zoomCanada: function (e) {
+                map.setView([53, -115], 4);
+            },
+
+            _zoomSamerica: function (e) {
+                map.setView([-26, -58], 5);
+            },
+
+            _createButton: function (html, title, className, container, fn) {
+                var link = L.DomUtil.create('a', className, container);
+                link.innerHTML = html;
+                link.href = '#';
+                link.title = title;
+
+                L.DomEvent.on(link, 'mousedown dblclick', L.DomEvent.stopPropagation)
+                    .on(link, 'click', L.DomEvent.stop)
+                    .on(link, 'click', fn, this)
+                    .on(link, 'click', this._refocusOnMap, this);
+
+                return link;
+            },
+
+            _updateDisabled: function () {
+                var map = this._map
+                    , className = 'leaflet-disabled';
+
+                L.DomUtil.removeClass(this._zoomInButton, className);
+                L.DomUtil.removeClass(this._zoomOutButton, className);
+
+                if (map._zoom === map.getMinZoom()) {
+                    L.DomUtil.addClass(this._zoomOutButton, className);
+                }
+                if (map._zoom === map.getMaxZoom()) {
+                    L.DomUtil.addClass(this._zoomInButton, className);
+                }
+            }
+        });
+        // add the new control to the map
+        var zoomHome = new L.Control.zoomHome();
+        zoomHome.addTo(map);
+
+        //Below is a JSON object storing all of the locations I have lived in over my life for more than 1 month
+        var myHomes = {
+            "homes": [
+                {
+                    "Name": "Denver CO"
+                    , "Lat": 39.73
+                    , "Lng": -104.99
+                    , "Description": "I lived in Denver CO while I worked as a USPS mail carrier."
+                }
+                
+                , {
+                    "Name": "Longmont CO"
+                    , "Lat": 40.16
+                    , "Lng": -105.10
+                    , "Description": "I was raised in Longmont CO and spend most of my adolescent life there."
+            }
+                
+                , {
+                    "Name": "Boulder CO"
+                    , "Lat": 40.01
+                    , "Lng": -105.27
+                    , "Description": "I was born in Boulder CO and lived there for the first 4 years of my life"
+            }
+                
+                , {
+                    "Name": "Tuscon AZ"
+                    , "Lat": 32.22
+                    , "Lng": -110.92
+                    , "Description": "I moved to Tuscon AZ with my parents when I was young as my dad found a job there."
+            }
+                
+                , {
+                    "Name": "Rochester MN"
+                    , "Lat": 44.01
+                    , "Lng": -92.480
+                    , "Description": "I moved to Rochester MN with my parents when I was young as my dad found a job there."
+            }
+                
+                , {
+                    "Name": "Vancouver BC"
+                    , "Lat": 49.28
+                    , "Lng": -123.12
+                    , "Description": "I studied Geography at the  University of BC in Vancouver."
+            }
+                
+                , {
+                    "Name": "Williams Lake BC"
+                    , "Lat": 52.14
+                    , "Lng": -122.14
+                    , "Description": "I moved to Williams Lake for my first GIS internship job with the Forest Service."
+            }
+                
+                , {
+                    "Name": "Nelson BC"
+                    , "Lat": 49.49
+                    , "Lng": -117.29
+                    , "Description": "I moved to Nelson BC for second GIS internship job with the Forest Service."
+            }
+                
+                , {
+                    "Name": "King Salmon AK"
+                    , "Lat": 58.68
+                    , "Lng": -156.66
+                    , "Description": "I worked for the National Park Service in King Salmon doing invasive plant surveys and GIS work."
+            }
+                
+                , {
+                    "Name": "Edmonton AB"
+                    , "Lat": 53.54
+                    , "Lng": -113.49
+                    , "Description": "I moved to Edmonton AB for my first permanent full time job doing GIS work at an environmental consulting company."
+            }
+                
+                , {
+                    "Name": "Edmonton AB"
+                    , "Lat": 49.24
+                    , "Lng": -122.98
+                    , "Description": "I lived in Burnaby BC for a summer while I worked for a salmon habitat restoration company in Surrey BC."
+            }
+                
+                , {
+                    "Name": "Parana Argentina"
+                    , "Lat": -31.74
+                    , "Lng": -60.5115
+                    , "Description": "I lived in Parana, Argentina for a summer during highschool where I stayed with a host family and attended a local school to improve my Spanish."
+            }
+            , ]
+        };
+
+        console.log(myHomes.homes.name);
+
+        for (homes in myHomes.homes) {
+            //            console.log(myHomes.homes[homes].Name);
+            var popupDesc = myHomes.homes[homes].Description
+            var popupName = myHomes.homes[homes].Name
+            var popupHTML = "<h2>Home Location: " + popupName + "<h3>" + popupDesc
+            L.marker([myHomes.homes[homes].Lat, myHomes.homes[homes].Lng]).addTo(map).bindPopup(popupHTML);
+            //            L.marker([myHomes.Lat, myHomes.Lng]).addTo(map);
+        };
+
+        //        L.marker([40, -105]).addTo(map);
+
+        var dataLayer, attribute = "year";
+
+
+        function drawfeatures() {
+
+            dataLayer = L.geoJson(routes, {
+
+
+                style: function (feature) {
+
+                    return {
+                        //                        color: '#949494'
+                        color: '#5258F9'
+                        , opacity: 1
+                        , weight: 5
+                    };
+                }
+            }).addTo(map);
+
+
+            //                Do the same as above for the second dataset. This doesnt appear to be working correctly.
+            //            dataLayer2 = L.geoJson(roadssample, {
+            //                style: function (feature) {
+            //                    return {
+            ////                        color: '#949494'
+            //                        color: '#5258F9'
+            //                        , opacity: 1
+            //                        , weight: 5
+            //                    }
+            //                }
+            //            }).addTo(map);
+
+
+            dataLayer.bringToFront();
+
+            drawInfo();
+            drawCurrent();
+
+
+            //                need to add a mouseover listener here to show information about trips that are being hovered over
+
+
+
+        };
+
+        function changeStyle() {
+            //            drawCurrent();
+
+            dataLayer.eachLayer(function (layer) {
+                console.log(layer.feature.properties.year);
+
+                if (layer.feature.properties.year === attribute) {
+                    layer.setStyle({
+                        color: 'yellow'
+                        , weight: 6
+                        , opacity: 1
+
+                    })
+                    layer.bringToFront();
+                } else {
+                    layer.setStyle({
+                        color: '#5258F9'
+                        , weight: 5
+                        , opacity: 1
+                    })
+
+                }
+
+            });
+
+        } // end changeStyle
+
+
+
+
+        //!!!add slider bar
+
+        drawfeatures();
+        createSliderUI();
+
+
+
+
+        function createSliderUI() {
+            // create a Leaflet control object and store a reference to it in a variable
+            var sliderControl = L.control({
+                position: 'bottom'
+            });
+
+            sliderControl.onAdd = function (map) {
+
+                // select an existing DOM element with an id of "ui-controls"
+                var slider = L.DomUtil.get("ui-controls");
+
+                // when the user clicks on the slider element
+                L.DomEvent.addListener(slider, 'mousedown', function (e) {
+
+                    // prevent the click event from bubbling up to the map, this means when you click and move the slider it wont also drag the leaflet map around
+                    L.DomEvent.stopPropagation(e);
+
+                });
+
+                // return the slider from the onAdd method
+                return slider;
+            }
+
+            // add the control object containing our slider element to the map
+            //                sliderControl.addTo(map);
+
+            //select the year-slider form element
+            $(".year-slider")
+                //            when the slider is changed, call a function that updates the attribute value to the current year position, and then run the update map function to generate the map and legend again
+                .on("input change", function () {
+
+                    attribute = $(this).val();
+                    changeStyle();
+                    //                    updateInfo(this);
+
+                    console.log(attribute);
+
+                    //                    updateInfo(attribute);
+
+                    //                    attribute = layer.feature.properties.year;
+
+                    //                    layer.setStyle({
+                    //                        color: 'yellow'
+                    //                        , weight: 2
+                    //                        , opacity: 1
+                    //
+                    //                    })
+                    //                    layer.bringToFront();
+
+                    var html3 = "Year: " + attribute
+
+                    $(".current").html(html3);
+
+
+                    $(".year-slider").val(attribute);
+
+
+                });
+
+        }
+
+        function drawInfo() {
+            var info = L.control({
+                position: 'bottomleft'
+            });
+
+
+            info.onAdd = function (map) {
+                var div = L.DomUtil.create('div', 'info')
+                return div;
+            };
+
+
+
+
+            info.addTo(map);
+            $(".info").hide();
+
+            dataLayer.eachLayer(function (layer) {
+                layer.on('mouseover', function () {
+
+
+                    updateInfo(this);
+
+                    attribute = layer.feature.properties.year;
+
+                    layer.setStyle({
+                        color: 'yellow'
+                        , weight: 6
+                        , opacity: 1
+
+                    })
+                    layer.bringToFront();
+
+
+                    $(".year-slider").val(attribute);
+
+                });
+
+                layer.on('mouseout', function () {
+                    layer.setStyle({
+                        //                        color: '#949494'
+                        color: '#5258F9'
+                        , weight: 4
+                        , opacity: 1
+                    })
+                })
+
+            });
+
+            dataLayer.on('mouseover', function () {
+                $(".info").show();
+            });
+            dataLayer.on('mouseout', function () {
+                $(".info").hide();
+            });
+
+        }
+
+        //        functin for drawing current year
+        function drawCurrent() {
+            var current = L.control({
+                position: 'bottomright'
+            , });
+
+
+
+
+
+            current.onAdd = function (map) {
+                var div = L.DomUtil.create('div', 'current')
+                return div;
+            };
+
+
+
+
+            current.addTo(map);
+            //                        $(".current").hide();
+
+            $(".current").html("Year: 1986");
+            dataLayer.eachLayer(function (layer) {
+
+
+
+                layer.on('mouseover', function () {
+
+
+                    updateInfo(this);
+
+                    attribute = layer.feature.properties.year;
+
+                    layer.setStyle({
+                        color: 'yellow'
+                        , weight: 6
+                        , opacity: 1
+
+                    })
+                    layer.bringToFront();
+
+
+                    $(".year-slider").val(attribute);
+
+                });
+
+                layer.on('mouseout', function () {
+                    layer.setStyle({
+                        //                        color: '#949494'
+                        color: '#5258F9'
+                        , weight: 4
+                        , opacity: 1
+                    })
+                })
+
+            });
+
+            dataLayer.on('mouseover', function () {
+                $(".current").show();
+            });
+            dataLayer.on('mouseout', function () {
+                //                $(".current").hide();
+            });
+
+        }
+
+
+        function updateInfo(feature) {
+
+            var props = feature.feature.properties.comment;
+
+            //            console.log(props);
+
+            //            console.log(props);
+
+            var html = "<h3>" + "Year: " + feature.feature.properties.year + "<br>Start: " + feature.feature.properties.end + "<br> End: " + feature.feature.properties.start + "</h3><h4>" + props
+
+            var html2 = "Year: " + feature.feature.properties.year
+
+            //            $(".side-panel")
+
+            $(".info").html(html);
+            $(".current").html(html2);
+
+            dataLayer.on('mouseover', function () {
+                $(".info").show();
+                $(".current").show();
+
+            })
+
+
+        }
+
+
+
+
+        //!!!update csv content
+
+        //!!!add mouse over labels (or update side bar)
+    </script>
+</body>
+
+</html>
