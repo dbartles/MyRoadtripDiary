@@ -11,6 +11,7 @@
 
 
     <script src='https://api.mapbox.com/mapbox.js/v2.2.4/mapbox.js'></script>
+
     <link href='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css' rel='stylesheet' />
 
     <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
@@ -33,8 +34,17 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/1.10.0/d3-legend.min.js"></script>
 
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css">
+
+    <script src="https://use.fontawesome.com/02f3d0ad54.js"></script>
+
+    <link rel="stylesheet" href="leaflet.awesome-markers.css">
+
+    <script src="leaflet.awesome-markers.js"></script>
+    <!--
     <script src="//d3js.org/d3.v3.min.js"></script>
     <script src="d3.geo.tile.min.js"></script>
+-->
 
     <style>
         body {
@@ -57,16 +67,20 @@
         }
         
         .leaflet-bar a {
+            /*
             background-color: #fff;
             border-bottom: 1px solid #ccc;
             color: #444;
+*/
             display: block;
-            height: 26px;
-            width: 105px;
-            line-height: 1.45 !important;
+            height: 25px;
+            width: 25px;
+            /*
+            line-height: 1.0 !important;
             text-align: center;
             text-decoration: none;
             font: bold 18px 'Ubuntu', sans-serif;
+*/
         }
         
         .info {
@@ -118,10 +132,10 @@
         #ui-controls {
             position: absolute;
             right: 0%;
-            bottom: 56%;
-            width: 25.5%;
-            padding: 8px 15px 8px 15px;
-            background: rgba(75, 75, 75, 0.8);
+            bottom: 20%;
+            width: 23.5%;
+            padding: 15px 25px 40px 25px;
+            background: whitesmoke;
             box-shadow: 0 0 0px rgba(0, 0, 0, 0.2);
             border-radius: 5px;
             float: right;
@@ -214,6 +228,11 @@
             -webkit-transition: left 300ms, right 300ms;
             transition: left 300ms, right 300ms;
         }
+        
+        .awesome-marker i {
+            font-size: 18px;
+            margin-top: 8px;
+        }
     </style>
 </head>
 
@@ -247,8 +266,8 @@
             <script src="nouislider.min.js"></script>
             <div id='connect'></div>
 
-            <span class="min">1988</span><span class="max">2016</span>
-            <input type="range" min="1988" , max="2016" , value="1988" , step="1" , class="year-slider">
+            <!--            <span class="min">1988</span><span class="max">2016</span>-->
+            <!--            <input type="range" min="1988" , max="2016" , value="1988" , step="1" , class="year-slider">-->
 
         </label>
     </div>
@@ -266,6 +285,11 @@
             , range: {
                 'min': 1988
                 , 'max': 2016
+            }
+            , pips: {
+                mode: 'count'
+                , values: 5
+                , density: 10
             }
         });
 
@@ -291,7 +315,7 @@
 
         var lat = 37.6;
         var lng = -95.3;
-        var zoom = 5;
+        var zoom = 4;
 
         console.log(connectSlider.noUiSlider.get());
 
@@ -307,14 +331,14 @@
             changeStyle()
             attribute = $(this).val();
             changeStyle();
-            
 
 
-            var html3 = "Year: " + Math.round(sliderPosition[0], 0) + " - "  + Math.round(sliderPosition[1], 0);
+
+            var html3 = "Year: " + Math.round(sliderPosition[0], 0) + " - " + Math.round(sliderPosition[1], 0);
 
             $(".current").html(html3);
 
-//            $(".year-slider").val(attribute);
+            //            $(".year-slider").val(attribute);
         });
 
 
@@ -329,6 +353,19 @@
 
         });
 
+        //        var positionsStepped = document.getElementById('pips-positions-stepped');
+        //
+        //        noUiSlider.create(positionsStepped, {
+        //            range: range_all_sliders
+        //            , start: 0
+        //            , pips: {
+        //                mode: 'positions'
+        //                , values: [0, 25, 50, 75, 100]
+        //                , density: 4
+        //                , stepped: true
+        //            }
+        //        });
+
 
 
 
@@ -336,7 +373,7 @@
 
         var options = {
             center: [37.6, -85.3]
-            , zoom: 5
+            , zoom: 9
             , dragging: true
             , zoomControl: false
         }
@@ -353,104 +390,108 @@
             , accessToken: 'pk.eyJ1IjoiZGJhcnRsZXkiLCJhIjoiY2lwYnJjb3drMDA3aXNubTd4MmtzYXN5cyJ9.SuTq31wTJwyVb37BXVadxQ'
         }).addTo(map);
 
+        L.control.zoom().addTo(map);
 
         // custom zoom bar control that includes a Zoom Home and a zoom to Canada, America, and Argentina function
-        L.Control.zoomHome = L.Control.extend({
-            options: {
-                position: 'bottomright'
-                , zoomInText: '+'
-                , zoomInTitle: 'Zoom in'
-                , zoomOutText: '-'
-                , zoomOutTitle: 'Zoom out'
-                , zoomHomeText: 'America'
-                , zoomHomeTitle: 'Zoom home'
-                , zoomCanadaText: 'Canada'
-                , zoomCanadaTitle: 'Zoom Canada'
-                , zoomSamericaText: 'Argentina'
-                , zoomSamericaTitle: 'Zoom S America'
-            },
-
-            onAdd: function (map) {
-                var controlName = 'gin-control-zoom'
-                    , container = L.DomUtil.create('div', controlName + ' leaflet-bar')
-                    , options = this.options;
-
-                this._zoomInButton = this._createButton(options.zoomInText, options.zoomInTitle
-                    , controlName + '-in', container, this._zoomIn);
-                //                this._zoomHomeButton = this._createButton(options.zoomHomeText, options.zoomHomeTitle
-                //                    , controlName + '-home', container, this._zoomHome);
-                //                this._zoomCanadaButtom = this._createButton(options.zoomCanadaText, options.zoomHomeTitle
-                ////                    , controlName + '-canada', container, this._zoomCanada);
-                //                this.zoomSamericaButton =
-                //                    this._createButton(options.zoomSamericaText, options.zoomHomeTitle
-                //                        , controlName + '-Samerica', container, this._zoomSamerica);
-                this._zoomOutButton = this._createButton(options.zoomOutText, options.zoomOutTitle
-                    , controlName + '-out', container, this._zoomOut);
-
-                this._updateDisabled();
-                map.on('zoomend zoomlevelschange', this._updateDisabled, this);
-
-                return container;
-            },
-
-            onRemove: function (map) {
-                map.off('zoomend zoomlevelschange', this._updateDisabled, this);
-            },
-
-            _zoomIn: function (e) {
-                this._map.zoomIn(e.shiftKey ? 3 : 1);
-            },
-
-            _zoomOut: function (e) {
-                this._map.zoomOut(e.shiftKey ? 3 : 1);
-            },
-
-            _zoomHome: function (e) {
-                map.setView([lat, lng], 5);
-            },
-
-            _zoomCanada: function (e) {
-                map.setView([53, -115], 4);
-            },
-
-            _zoomSamerica: function (e) {
-                map.setView([-26, -58], 5);
-            },
-
-            _createButton: function (html, title, className, container, fn) {
-                var link = L.DomUtil.create('a', className, container);
-                link.innerHTML = html;
-                link.href = '#';
-                link.title = title;
-
-                L.DomEvent.on(link, 'mousedown dblclick', L.DomEvent.stopPropagation)
-                    .on(link, 'click', L.DomEvent.stop)
-                    .on(link, 'click', fn, this)
-                    .on(link, 'click', this._refocusOnMap, this);
-
-                return link;
-            },
-
-            _updateDisabled: function () {
-                var map = this._map
-                    , className = 'leaflet-disabled';
-
-                L.DomUtil.removeClass(this._zoomInButton, className);
-                L.DomUtil.removeClass(this._zoomOutButton, className);
-
-                if (map._zoom === map.getMinZoom()) {
-                    L.DomUtil.addClass(this._zoomOutButton, className);
-                }
-                if (map._zoom === map.getMaxZoom()) {
-                    L.DomUtil.addClass(this._zoomInButton, className);
-                }
-            }
-        });
-        // add the new control to the map
-        var zoomHome = new L.Control.zoomHome();
-        zoomHome.addTo(map);
+        //        L.Control.zoomHome = L.Control.extend({
+        //            options: {
+        //                position: 'bottomright'
+        //                , zoomInText: '+'
+        //                , zoomInTitle: 'Zoom in'
+        //                , zoomOutText: '-'
+        //                , zoomOutTitle: 'Zoom out'
+        //                , zoomHomeText: 'America'
+        //                , zoomHomeTitle: 'Zoom home'
+        //                , zoomCanadaText: 'Canada'
+        //                , zoomCanadaTitle: 'Zoom Canada'
+        //                , zoomSamericaText: 'Argentina'
+        //                , zoomSamericaTitle: 'Zoom S America'
+        //            },
+        //
+        //            onAdd: function (map) {
+        //                var controlName = 'gin-control-zoom'
+        //                    , container = L.DomUtil.create('div', controlName + ' leaflet-bar')
+        //                    , options = this.options;
+        //
+        //                this._zoomInButton = this._createButton(options.zoomInText, options.zoomInTitle
+        //                    , controlName + '-in', container, this._zoomIn);
+        //                //                this._zoomHomeButton = this._createButton(options.zoomHomeText, options.zoomHomeTitle
+        //                //                    , controlName + '-home', container, this._zoomHome);
+        //                //                this._zoomCanadaButtom = this._createButton(options.zoomCanadaText, options.zoomHomeTitle
+        //                ////                    , controlName + '-canada', container, this._zoomCanada);
+        //                //                this.zoomSamericaButton =
+        //                //                    this._createButton(options.zoomSamericaText, options.zoomHomeTitle
+        //                //                        , controlName + '-Samerica', container, this._zoomSamerica);
+        //                this._zoomOutButton = this._createButton(options.zoomOutText, options.zoomOutTitle
+        //                    , controlName + '-out', container, this._zoomOut);
+        //
+        //                this._updateDisabled();
+        //                map.on('zoomend zoomlevelschange', this._updateDisabled, this);
+        //
+        //                return container;
+        //            },
+        //
+        //            onRemove: function (map) {
+        //                map.off('zoomend zoomlevelschange', this._updateDisabled, this);
+        //            },
+        //
+        //            _zoomIn: function (e) {
+        //                this._map.zoomIn(e.shiftKey ? 3 : 1);
+        //            },
+        //
+        //            _zoomOut: function (e) {
+        //                this._map.zoomOut(e.shiftKey ? 3 : 1);
+        //            },
+        //
+        //            _zoomHome: function (e) {
+        //                map.setView([lat, lng], 5);
+        //            },
+        //
+        //            _zoomCanada: function (e) {
+        //                map.setView([53, -115], 4);
+        //            },
+        //
+        //            _zoomSamerica: function (e) {
+        //                map.setView([-26, -58], 5);
+        //            },
+        //
+        //            _createButton: function (html, title, className, container, fn) {
+        //                var link = L.DomUtil.create('a', className, container);
+        //                link.innerHTML = html;
+        //                link.href = '#';
+        //                link.title = title;
+        //
+        //                L.DomEvent.on(link, 'mousedown dblclick', L.DomEvent.stopPropagation)
+        //                    .on(link, 'click', L.DomEvent.stop)
+        //                    .on(link, 'click', fn, this)
+        //                    .on(link, 'click', this._refocusOnMap, this);
+        //
+        //                return link;
+        //            },
+        //
+        //            _updateDisabled: function () {
+        //                var map = this._map
+        //                    , className = 'leaflet-disabled';
+        //
+        //                L.DomUtil.removeClass(this._zoomInButton, className);
+        //                L.DomUtil.removeClass(this._zoomOutButton, className);
+        //
+        //                if (map._zoom === map.getMinZoom()) {
+        //                    L.DomUtil.addClass(this._zoomOutButton, className);
+        //                }
+        //                if (map._zoom === map.getMaxZoom()) {
+        //                    L.DomUtil.addClass(this._zoomInButton, className);
+        //                }
+        //            }
+        //        });
+        //        // add the new control to the map
+        //        var zoomHome = new L.Control.zoomHome();
+        //        zoomHome.addTo(map);
 
         //Below is a JSON object storing all of the locations I have lived in over my life for more than 1 month
+
+
+
         var myHomes = {
             "homes": [
                 {
@@ -459,6 +500,11 @@
                     , "Lng": -104.99
                     , "Description": "I lived in Denver CO while I worked as a USPS mail carrier."
                 }
+
+
+
+
+
 
 
 
@@ -480,6 +526,11 @@
 
 
 
+
+
+
+
+
                 
                 , {
                     "Name": "Boulder CO"
@@ -487,6 +538,11 @@
                     , "Lng": -105.27
                     , "Description": "I was born in Boulder CO and lived there for the first 4 years of my life"
             }
+
+
+
+
+
 
 
 
@@ -508,6 +564,11 @@
 
 
 
+
+
+
+
+
                 
                 , {
                     "Name": "Rochester MN"
@@ -515,6 +576,11 @@
                     , "Lng": -92.480
                     , "Description": "I moved to Rochester MN with my parents when I was young as my dad found a job there."
             }
+
+
+
+
+
 
 
 
@@ -536,6 +602,11 @@
 
 
 
+
+
+
+
+
                 
                 , {
                     "Name": "Williams Lake BC"
@@ -543,6 +614,11 @@
                     , "Lng": -122.14
                     , "Description": "I moved to Williams Lake for my first GIS internship job with the Forest Service."
             }
+
+
+
+
+
 
 
 
@@ -564,6 +640,11 @@
 
 
 
+
+
+
+
+
                 
                 , {
                     "Name": "King Salmon AK"
@@ -571,6 +652,11 @@
                     , "Lng": -156.66
                     , "Description": "I worked for the National Park Service in King Salmon doing invasive plant surveys and GIS work."
             }
+
+
+
+
+
 
 
 
@@ -592,6 +678,11 @@
 
 
 
+
+
+
+
+
                 
                 , {
                     "Name": "Edmonton AB"
@@ -606,6 +697,11 @@
 
 
 
+
+
+
+
+
                 
                 , {
                     "Name": "Parana Argentina"
@@ -613,6 +709,11 @@
                     , "Lng": -60.5115
                     , "Description": "I lived in Parana, Argentina for a summer during highschool where I stayed with a host family and attended a local school to improve my Spanish."
             }
+
+
+
+
+
 
 
 
@@ -647,15 +748,26 @@
             var popupDesc = myHomes.homes[homes].Description
             var popupName = myHomes.homes[homes].Name
             var popupHTML = "<h2>Home Location: " + popupName + "<h3>" + popupDesc
+                //            L.marker([myHomes.homes[homes].Lat, myHomes.homes[homes].Lng], {
+                //                icon: thisHome
+                //            }).addTo(map).bindPopup(popupHTML);
+
+            var blueMarker = L.AwesomeMarkers.icon({
+                icon: 'home'
+                , markerColor: 'green'
+                , prefix: 'fa'
+                , iconColor: 'black'
+            });
             L.marker([myHomes.homes[homes].Lat, myHomes.homes[homes].Lng], {
-                icon: thisHome
+                icon: blueMarker
             }).addTo(map).bindPopup(popupHTML);
+
+            //                var blueMarker = L.AwesomeMarkers.icon({ icon: 'home' , markerColor: 'green', prefix: 'fa', iconColor: 'black' }); L.marker([49, -97], { icon: blueMarker }).addTo(map);
+
+
+
+            var dataLayer, attribute = "year";
         };
-
-
-
-        var dataLayer, attribute = "year";
-
 
         function drawfeatures() {
 
@@ -667,7 +779,7 @@
                     return {
                         color: 'yellow'
                         , opacity: 1
-                        , weight: 5
+                        , weight: 3
                     };
                 }
             }).addTo(map);
@@ -709,15 +821,15 @@
                 if (layer.feature.properties.year > sliderPosition[0] && layer.feature.properties.year < sliderPosition[1]) {
                     layer.setStyle({
                         color: 'yellow'
-                        , weight: 6
+                        , weight: 3
                         , opacity: 1
 
                     })
                     layer.bringToFront();
                 } else {
                     layer.setStyle({
-                        color: '#5258F9'
-                        , weight: 5
+                        color: '#5F9EA0'
+                        , weight: 3
                         , opacity: 1
                     })
 
@@ -842,7 +954,7 @@
 
             current.addTo(map);
 
-            $(".current").html("Year: 1988");
+            $(".current").html("Year: 1988-2016");
             dataLayer.eachLayer(function (layer) {
 
                 layer.on('mouseover', function () {
@@ -897,11 +1009,11 @@
             //            $(".side-panel")
 
             $(".info").html(html);
-            $(".current").html(html2);
+            //            $(".current").html(html2);
 
             dataLayer.on('mouseover', function () {
                 $(".info").show();
-                $(".current").show();
+                //                $(".current").show();
 
             })
 
