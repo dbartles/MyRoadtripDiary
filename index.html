@@ -1,4 +1,4 @@
- <html>
+<html>
 
 <head>
     <meta charset="utf-8">
@@ -197,7 +197,6 @@
             transition: stroke .8s;
         }
         
-/*
         #connect .noUi-origin {
             right: auto;
             width: 0;
@@ -210,13 +209,11 @@
             background: #80C9F5;
             box-shadow: inset 0 0 3px rgba(51, 51, 51, 0.45);
         }
-
         
         #connect.noUi-state-tap .connect {
             -webkit-transition: left 300ms, right 300ms;
             transition: left 300ms, right 300ms;
         }
-*/
     </style>
 </head>
 
@@ -249,10 +246,10 @@
 
             <script src="nouislider.min.js"></script>
             <div id='connect'></div>
-            
-            <span class="min">1986</span><span class="max">2016</span>
-            <input type="range" min="1986" , max="2016" , value="1986" , step="1" , class="year-slider">
-        
+
+            <span class="min">1988</span><span class="max">2016</span>
+            <input type="range" min="1988" , max="2016" , value="1988" , step="1" , class="year-slider">
+
         </label>
     </div>
 
@@ -260,49 +257,82 @@
     <script src="roadssample.geojson" type="text/javascript"></script>
 
     <script>
+        var connectSlider = document.getElementById('connect');
+
+        noUiSlider.create(connectSlider, {
+            start: [1988, 2016]
+            , connect: true
+            , step: 1
+            , range: {
+                'min': 1988
+                , 'max': 2016
+            }
+        });
 
 
-        //        var connectSlider = document.getElementById('connect');
-        //
-        //        noUiSlider.create(connectSlider, {
-        //            start: [1986, 2016]
-        //            , connect: true
-        //            , step: 1
-        //            , range: {
-        //                'min': 1986
-        //                , 'max': 2016
-        //            }
-        //        });
-        //
-        //        var connectBar = document.createElement('div')
-        //            , connectBase = connectSlider.querySelector('.noUi-base');
-        //
-        //        // Give the bar a class for styling and add it to the slider.
-        //        connectBar.className += 'connect';
-        //        connectBase.appendChild(connectBar);
-        //
-        //
-        //
-        //        var positionsStepped = document.getElementById('pips-positions-stepped');
-        //
-        //        var range_all_sliders = {
-        //            'min': [1986]
-        //            , '10%': [1989]
-        //            , '50%': [1995, 2010]
-        //            , 'max': [2016]
-        //        };
+        var connectBar = document.createElement('div')
+            , connectBase = connectSlider.querySelector('.noUi-base');
+
+        // Give the bar a class for styling and add it to the slider.
+        connectBar.className += 'connect';
+        connectBase.appendChild(connectBar);
+
+
+
+
+        var positionsStepped = document.getElementById('pips-positions-stepped');
+
+        var range_all_sliders = {
+            'min': [1988]
+            , '10%': [1989]
+            , '50%': [1995, 2010]
+            , 'max': [2016]
+        };
 
         var lat = 37.6;
         var lng = -95.3;
         var zoom = 5;
 
+        console.log(connectSlider.noUiSlider.get());
+
+        var sliderPosition = [];
+
+
+        document.getElementById('connect').addEventListener('mousemove', function () {
+            //            console.log(connectSlider.noUiSlider.get());
+            sliderPosition = connectSlider.noUiSlider.get();
+            //            return sliderPosition;
+            console.log(sliderPosition);
+
+            changeStyle()
+            attribute = $(this).val();
+            changeStyle();
+            
+
+
+            var html3 = "Year: " + Math.round(sliderPosition[0], 0) + " - "  + Math.round(sliderPosition[1], 0);
+
+            $(".current").html(html3);
+
+//            $(".year-slider").val(attribute);
+        });
+
+
+        //        console.log(sliderPosition);
+
+
+        // when the user clicks on the slider element
+        L.DomEvent.addListener(connectSlider, 'mousedown', function (e) {
+
+            // prevent the click event from bubbling up to the map, this means when you click and move the slider it wont also drag the leaflet map around
+            L.DomEvent.stopPropagation(e);
+
+        });
 
 
 
 
-
-
-        var attribute = "1986" // set a default attribute where the slider starts
+        var attribute = "1988" // set a default attribute where the slider starts
 
         var options = {
             center: [37.6, -85.3]
@@ -347,13 +377,13 @@
 
                 this._zoomInButton = this._createButton(options.zoomInText, options.zoomInTitle
                     , controlName + '-in', container, this._zoomIn);
-                this._zoomHomeButton = this._createButton(options.zoomHomeText, options.zoomHomeTitle
-                    , controlName + '-home', container, this._zoomHome);
-                this._zoomCanadaButtom = this._createButton(options.zoomCanadaText, options.zoomHomeTitle
-                    , controlName + '-canada', container, this._zoomCanada);
-                this.zoomSamericaButton =
-                    this._createButton(options.zoomSamericaText, options.zoomHomeTitle
-                        , controlName + '-Samerica', container, this._zoomSamerica);
+                //                this._zoomHomeButton = this._createButton(options.zoomHomeText, options.zoomHomeTitle
+                //                    , controlName + '-home', container, this._zoomHome);
+                //                this._zoomCanadaButtom = this._createButton(options.zoomCanadaText, options.zoomHomeTitle
+                ////                    , controlName + '-canada', container, this._zoomCanada);
+                //                this.zoomSamericaButton =
+                //                    this._createButton(options.zoomSamericaText, options.zoomHomeTitle
+                //                        , controlName + '-Samerica', container, this._zoomSamerica);
                 this._zoomOutButton = this._createButton(options.zoomOutText, options.zoomOutTitle
                     , controlName + '-out', container, this._zoomOut);
 
@@ -429,6 +459,13 @@
                     , "Lng": -104.99
                     , "Description": "I lived in Denver CO while I worked as a USPS mail carrier."
                 }
+
+
+
+
+
+
+
                 
                 , {
                     "Name": "Longmont CO"
@@ -436,6 +473,13 @@
                     , "Lng": -105.10
                     , "Description": "I was raised in Longmont CO and spend most of my adolescent life there."
             }
+
+
+
+
+
+
+
                 
                 , {
                     "Name": "Boulder CO"
@@ -443,6 +487,13 @@
                     , "Lng": -105.27
                     , "Description": "I was born in Boulder CO and lived there for the first 4 years of my life"
             }
+
+
+
+
+
+
+
                 
                 , {
                     "Name": "Tuscon AZ"
@@ -450,6 +501,13 @@
                     , "Lng": -110.92
                     , "Description": "I moved to Tuscon AZ with my parents when I was young as my dad found a job there."
             }
+
+
+
+
+
+
+
                 
                 , {
                     "Name": "Rochester MN"
@@ -457,6 +515,13 @@
                     , "Lng": -92.480
                     , "Description": "I moved to Rochester MN with my parents when I was young as my dad found a job there."
             }
+
+
+
+
+
+
+
                 
                 , {
                     "Name": "Vancouver BC"
@@ -464,6 +529,13 @@
                     , "Lng": -123.12
                     , "Description": "I studied Geography at the  University of BC in Vancouver."
             }
+
+
+
+
+
+
+
                 
                 , {
                     "Name": "Williams Lake BC"
@@ -471,6 +543,13 @@
                     , "Lng": -122.14
                     , "Description": "I moved to Williams Lake for my first GIS internship job with the Forest Service."
             }
+
+
+
+
+
+
+
                 
                 , {
                     "Name": "Nelson BC"
@@ -478,6 +557,13 @@
                     , "Lng": -117.29
                     , "Description": "I moved to Nelson BC for second GIS internship job with the Forest Service."
             }
+
+
+
+
+
+
+
                 
                 , {
                     "Name": "King Salmon AK"
@@ -485,6 +571,13 @@
                     , "Lng": -156.66
                     , "Description": "I worked for the National Park Service in King Salmon doing invasive plant surveys and GIS work."
             }
+
+
+
+
+
+
+
                 
                 , {
                     "Name": "Edmonton AB"
@@ -492,6 +585,13 @@
                     , "Lng": -113.49
                     , "Description": "I moved to Edmonton AB for my first permanent full time job doing GIS work at an environmental consulting company."
             }
+
+
+
+
+
+
+
                 
                 , {
                     "Name": "Edmonton AB"
@@ -499,6 +599,13 @@
                     , "Lng": -122.98
                     , "Description": "I lived in Burnaby BC for a summer while I worked for a salmon habitat restoration company in Surrey BC."
             }
+
+
+
+
+
+
+
                 
                 , {
                     "Name": "Parana Argentina"
@@ -506,16 +613,43 @@
                     , "Lng": -60.5115
                     , "Description": "I lived in Parana, Argentina for a summer during highschool where I stayed with a host family and attended a local school to improve my Spanish."
             }
-            , ]
+
+
+
+
+
+
+                
+                , ]
         };
 
-//        loop through the json object to create popup markers
+        var HomeIcon = L.Icon.extend({
+            iconUrl: 'homeicon.png', //            , shadowUrl: 'leaf-shadow.png',
+
+            iconSize: [15, 35], // size of the icon
+            //            shadowSize: [50, 64], // size of the shadow
+            iconAnchor: [15, 94], // point of the icon which will correspond to marker's location
+            //            shadowAnchor: [4, 62], // the same for the shadow
+            popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var thisHome = new HomeIcon({
+            iconUrl: 'homeicon.png'
+        })
+
+        L.icon = function (options) {
+            return new L.Icon(options);
+        }
+
+        //        loop through the json object to create popup markers
         for (homes in myHomes.homes) {
             //            console.log(myHomes.homes[homes].Name);
             var popupDesc = myHomes.homes[homes].Description
             var popupName = myHomes.homes[homes].Name
             var popupHTML = "<h2>Home Location: " + popupName + "<h3>" + popupDesc
-            L.marker([myHomes.homes[homes].Lat, myHomes.homes[homes].Lng]).addTo(map).bindPopup(popupHTML);
+            L.marker([myHomes.homes[homes].Lat, myHomes.homes[homes].Lng], {
+                icon: thisHome
+            }).addTo(map).bindPopup(popupHTML);
         };
 
 
@@ -531,7 +665,7 @@
                 style: function (feature) {
 
                     return {
-                        color: '#5258F9'
+                        color: 'yellow'
                         , opacity: 1
                         , weight: 5
                     };
@@ -547,10 +681,32 @@
 
         function changeStyle() {
 
+            //            dataLayer.eachLayer(function (layer) {
+            //                console.log(layer.feature.properties.year);
+            //
+            //                if (layer.feature.properties.year === attribute) {
+            //                    layer.setStyle({
+            //                        color: 'yellow'
+            //                        , weight: 6
+            //                        , opacity: 1
+            //
+            //                    })
+            //                    layer.bringToFront();
+            //                } else {
+            //                    layer.setStyle({
+            //                        color: '#5258F9'
+            //                        , weight: 5
+            //                        , opacity: 1
+            //                    })
+            //
+            //                }
+            //
+            //            });
+
             dataLayer.eachLayer(function (layer) {
                 console.log(layer.feature.properties.year);
 
-                if (layer.feature.properties.year === attribute) {
+                if (layer.feature.properties.year > sliderPosition[0] && layer.feature.properties.year < sliderPosition[1]) {
                     layer.setStyle({
                         color: 'yellow'
                         , weight: 6
@@ -571,11 +727,11 @@
 
         } // end changeStyle
 
-        
+
         drawfeatures();
         createSliderUI();
 
-        
+
         function createSliderUI() {
             // create a Leaflet control object and store a reference to it in a variable
             var sliderControl = L.control({
@@ -637,29 +793,30 @@
             dataLayer.eachLayer(function (layer) {
                 layer.on('mouseover', function () {
 
+
                     updateInfo(this);
 
                     attribute = layer.feature.properties.year;
 
-                    layer.setStyle({
-                        color: 'yellow'
-                        , weight: 6
-                        , opacity: 1
+                    //                    layer.setStyle({
+                    //                        color: 'yellow'
+                    //                        , weight: 6
+                    //                        , opacity: 1
+                    //
+                    //                    })
+                    //                    layer.bringToFront();
 
-                    })
-                    layer.bringToFront();
-                    
                     $(".year-slider").val(attribute);
 
                 });
 
-                layer.on('mouseout', function () {
-                    layer.setStyle({
-                        color: '#5258F9'
-                        , weight: 4
-                        , opacity: 1
-                    })
-                })
+                //                layer.on('mouseout', function () {
+                //                    layer.setStyle({
+                //                        color: '#5258F9'
+                //                        , weight: 4
+                //                        , opacity: 1
+                //                    })
+                //                })
 
             });
 
@@ -685,7 +842,7 @@
 
             current.addTo(map);
 
-            $(".current").html("Year: 1986");
+            $(".current").html("Year: 1988");
             dataLayer.eachLayer(function (layer) {
 
                 layer.on('mouseover', function () {
@@ -695,12 +852,12 @@
 
                     attribute = layer.feature.properties.year;
 
-                    layer.setStyle({
-                        color: 'yellow'
-                        , weight: 6
-                        , opacity: 1
-
-                    })
+                    //                    layer.setStyle({
+                    //                        color: 'yellow'
+                    //                        , weight: 6
+                    //                        , opacity: 1
+                    //
+                    //                    })
                     layer.bringToFront();
 
 
@@ -709,12 +866,12 @@
                 });
 
                 layer.on('mouseout', function () {
-                    layer.setStyle({
-                        //                        color: '#949494'
-                        color: '#5258F9'
-                        , weight: 4
-                        , opacity: 1
-                    })
+                    //                    layer.setStyle({
+                    //                        //                        color: '#949494'
+                    //                        color: '#5258F9'
+                    //                        , weight: 4
+                    //                        , opacity: 1
+                    //                    })
                 })
 
             });
@@ -749,7 +906,6 @@
             })
 
         }
-
     </script>
 </body>
 
