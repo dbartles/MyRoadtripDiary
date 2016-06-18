@@ -91,7 +91,7 @@
             box-shadow: 0 0 15px whitesmoke;
             border-radius: 3px;
             text-align: center;
-            max-width: 80%;
+            max-width: 70%;
             font: "Ubuntu", sans-serif;
             font-weight: 700;
             color: black;
@@ -132,7 +132,7 @@
         #ui-controls {
             position: absolute;
             right: 0%;
-            bottom: 20%;
+            bottom: 11%;
             width: 23.5%;
             padding: 15px 25px 40px 25px;
             background: whitesmoke;
@@ -158,7 +158,7 @@
             position: absolute;
             right: 0;
             top: 0;
-            bottom: 470;
+            bottom: 300;
             width: 28%;
             background: whitesmoke;
             border-left: 2px solid black;
@@ -254,6 +254,10 @@
         <h2>An interactive web map</h2>
         <p>This map is a spatial diary of various routes over land that I have travelled by car and bus. These road trips provide a good glimpse into my personal background and experiences that have shaped me over the course of my life. </p>
         <p>Use the slider bar below to highlight which year I have travelled certain roadways. Moving your mouse over roads will show you more information about a particular trip.</p>
+        <p>This map was created by Devin Bartley and last updated on June 19th, 2016</p>
+        <br>
+        <p>My Portfolio: <a href="http://devinleebartley.github.io/">http://devinleebartley.github.io/</a></p>
+        <p>Github for this Page: <a href="https://github.com/DevinLeeBartley/MyRoadtripDiary">https://github.com/DevinLeeBartley/ MyRoadtripDiary</a></p>
         <div id='current'></div>
 
         <div id='info'></div>
@@ -313,7 +317,7 @@
             , 'max': [2016]
         };
 
-        var lat = 37.6;
+        var lat = 42.6;
         var lng = -95.3;
         var zoom = 4;
 
@@ -495,7 +499,7 @@
         var myHomes = {
             "homes": [
                 {
-                    "Name": "Denver CO"
+                    "Name": "Denver, CO"
                     , "Lat": 39.73
                     , "Lng": -104.99
                     , "Description": "I lived in Denver CO while I worked as a USPS mail carrier."
@@ -514,7 +518,7 @@
 
                 
                 , {
-                    "Name": "Longmont CO"
+                    "Name": "Longmont, CO"
                     , "Lat": 40.16
                     , "Lng": -105.10
                     , "Description": "I was raised in Longmont CO and spend most of my adolescent life there."
@@ -533,7 +537,7 @@
 
                 
                 , {
-                    "Name": "Boulder CO"
+                    "Name": "Boulder, CO"
                     , "Lat": 40.01
                     , "Lng": -105.27
                     , "Description": "I was born in Boulder CO and lived there for the first 4 years of my life"
@@ -552,7 +556,7 @@
 
                 
                 , {
-                    "Name": "Tuscon AZ"
+                    "Name": "Tuscon, AZ"
                     , "Lat": 32.22
                     , "Lng": -110.92
                     , "Description": "I moved to Tuscon AZ with my parents when I was young as my dad found a job there."
@@ -571,7 +575,7 @@
 
                 
                 , {
-                    "Name": "Rochester MN"
+                    "Name": "Rochester, MN"
                     , "Lat": 44.01
                     , "Lng": -92.480
                     , "Description": "I moved to Rochester MN with my parents when I was young as my dad found a job there."
@@ -590,7 +594,7 @@
 
                 
                 , {
-                    "Name": "Vancouver BC"
+                    "Name": "Vancouver, BC"
                     , "Lat": 49.28
                     , "Lng": -123.12
                     , "Description": "I studied Geography at the  University of BC in Vancouver."
@@ -609,7 +613,7 @@
 
                 
                 , {
-                    "Name": "Williams Lake BC"
+                    "Name": "Williams Lake, BC"
                     , "Lat": 52.14
                     , "Lng": -122.14
                     , "Description": "I moved to Williams Lake for my first GIS internship job with the Forest Service."
@@ -628,7 +632,7 @@
 
                 
                 , {
-                    "Name": "Nelson BC"
+                    "Name": "Nelson, BC"
                     , "Lat": 49.49
                     , "Lng": -117.29
                     , "Description": "I moved to Nelson BC for second GIS internship job with the Forest Service."
@@ -944,7 +948,8 @@
 
         function drawCurrent() {
             var current = L.control({
-                position: 'bottomright'
+                position: 'bottomright',
+                width: '45%'
             , });
 
             current.onAdd = function (map) {
