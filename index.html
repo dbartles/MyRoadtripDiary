@@ -338,7 +338,7 @@
 
 
 
-            var html3 = "Year: " + Math.round(sliderPosition[0], 0) + " - " + Math.round(sliderPosition[1], 0);
+            var html3 = "Highlighted Years: " + Math.round(sliderPosition[0], 0) + " - " + Math.round(sliderPosition[1], 0);
 
             $(".current").html(html3);
 
@@ -959,7 +959,7 @@
 
             current.addTo(map);
 
-            $(".current").html("Year: 1988-2016");
+            $(".current").html("Highlighted Years: 1988 - 2016");
             dataLayer.eachLayer(function (layer) {
 
                 layer.on('mouseover', function () {
