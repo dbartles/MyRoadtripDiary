@@ -4,11 +4,7 @@
     <meta charset="utf-8">
     <title>Roads I've Travelled</title>
 
-    <!-- In <head> -->
     <link href="nouislider.min.css" rel="stylesheet">
-
-    <!--    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">-->
-
 
     <script src='https://api.mapbox.com/mapbox.js/v2.2.4/mapbox.js'></script>
 
@@ -41,10 +37,6 @@
     <link rel="stylesheet" href="leaflet.awesome-markers.css">
 
     <script src="leaflet.awesome-markers.js"></script>
-    <!--
-    <script src="//d3js.org/d3.v3.min.js"></script>
-    <script src="d3.geo.tile.min.js"></script>
--->
 
     <style>
         body {
@@ -67,20 +59,9 @@
         }
         
         .leaflet-bar a {
-            /*
-            background-color: #fff;
-            border-bottom: 1px solid #ccc;
-            color: #444;
-*/
             display: block;
             height: 25px;
             width: 25px;
-            /*
-            line-height: 1.0 !important;
-            text-align: center;
-            text-decoration: none;
-            font: bold 18px 'Ubuntu', sans-serif;
-*/
         }
         
         .info {
@@ -236,19 +217,11 @@
     </style>
 </head>
 
-
 <body>
 
     <div id='map'></div>
 
-
-
-
-
     <div id='side-panel'>
-
-
-
 
         <h1>My Roadtrip Diary</h1>
         <h2>An interactive web map</h2>
@@ -269,9 +242,6 @@
 
             <script src="nouislider.min.js"></script>
             <div id='connect'></div>
-
-            <!--            <span class="min">1988</span><span class="max">2016</span>-->
-            <!--            <input type="range" min="1988" , max="2016" , value="1988" , step="1" , class="year-slider">-->
 
         </label>
     </div>
@@ -304,9 +274,6 @@
         // Give the bar a class for styling and add it to the slider.
         connectBar.className += 'connect';
         connectBase.appendChild(connectBar);
-
-
-
 
         var positionsStepped = document.getElementById('pips-positions-stepped');
 
@@ -357,22 +324,6 @@
 
         });
 
-        //        var positionsStepped = document.getElementById('pips-positions-stepped');
-        //
-        //        noUiSlider.create(positionsStepped, {
-        //            range: range_all_sliders
-        //            , start: 0
-        //            , pips: {
-        //                mode: 'positions'
-        //                , values: [0, 25, 50, 75, 100]
-        //                , density: 4
-        //                , stepped: true
-        //            }
-        //        });
-
-
-
-
         var attribute = "1988" // set a default attribute where the slider starts
 
         var options = {
@@ -396,101 +347,7 @@
 
         L.control.zoom().addTo(map);
 
-        // custom zoom bar control that includes a Zoom Home and a zoom to Canada, America, and Argentina function
-        //        L.Control.zoomHome = L.Control.extend({
-        //            options: {
-        //                position: 'bottomright'
-        //                , zoomInText: '+'
-        //                , zoomInTitle: 'Zoom in'
-        //                , zoomOutText: '-'
-        //                , zoomOutTitle: 'Zoom out'
-        //                , zoomHomeText: 'America'
-        //                , zoomHomeTitle: 'Zoom home'
-        //                , zoomCanadaText: 'Canada'
-        //                , zoomCanadaTitle: 'Zoom Canada'
-        //                , zoomSamericaText: 'Argentina'
-        //                , zoomSamericaTitle: 'Zoom S America'
-        //            },
-        //
-        //            onAdd: function (map) {
-        //                var controlName = 'gin-control-zoom'
-        //                    , container = L.DomUtil.create('div', controlName + ' leaflet-bar')
-        //                    , options = this.options;
-        //
-        //                this._zoomInButton = this._createButton(options.zoomInText, options.zoomInTitle
-        //                    , controlName + '-in', container, this._zoomIn);
-        //                //                this._zoomHomeButton = this._createButton(options.zoomHomeText, options.zoomHomeTitle
-        //                //                    , controlName + '-home', container, this._zoomHome);
-        //                //                this._zoomCanadaButtom = this._createButton(options.zoomCanadaText, options.zoomHomeTitle
-        //                ////                    , controlName + '-canada', container, this._zoomCanada);
-        //                //                this.zoomSamericaButton =
-        //                //                    this._createButton(options.zoomSamericaText, options.zoomHomeTitle
-        //                //                        , controlName + '-Samerica', container, this._zoomSamerica);
-        //                this._zoomOutButton = this._createButton(options.zoomOutText, options.zoomOutTitle
-        //                    , controlName + '-out', container, this._zoomOut);
-        //
-        //                this._updateDisabled();
-        //                map.on('zoomend zoomlevelschange', this._updateDisabled, this);
-        //
-        //                return container;
-        //            },
-        //
-        //            onRemove: function (map) {
-        //                map.off('zoomend zoomlevelschange', this._updateDisabled, this);
-        //            },
-        //
-        //            _zoomIn: function (e) {
-        //                this._map.zoomIn(e.shiftKey ? 3 : 1);
-        //            },
-        //
-        //            _zoomOut: function (e) {
-        //                this._map.zoomOut(e.shiftKey ? 3 : 1);
-        //            },
-        //
-        //            _zoomHome: function (e) {
-        //                map.setView([lat, lng], 5);
-        //            },
-        //
-        //            _zoomCanada: function (e) {
-        //                map.setView([53, -115], 4);
-        //            },
-        //
-        //            _zoomSamerica: function (e) {
-        //                map.setView([-26, -58], 5);
-        //            },
-        //
-        //            _createButton: function (html, title, className, container, fn) {
-        //                var link = L.DomUtil.create('a', className, container);
-        //                link.innerHTML = html;
-        //                link.href = '#';
-        //                link.title = title;
-        //
-        //                L.DomEvent.on(link, 'mousedown dblclick', L.DomEvent.stopPropagation)
-        //                    .on(link, 'click', L.DomEvent.stop)
-        //                    .on(link, 'click', fn, this)
-        //                    .on(link, 'click', this._refocusOnMap, this);
-        //
-        //                return link;
-        //            },
-        //
-        //            _updateDisabled: function () {
-        //                var map = this._map
-        //                    , className = 'leaflet-disabled';
-        //
-        //                L.DomUtil.removeClass(this._zoomInButton, className);
-        //                L.DomUtil.removeClass(this._zoomOutButton, className);
-        //
-        //                if (map._zoom === map.getMinZoom()) {
-        //                    L.DomUtil.addClass(this._zoomOutButton, className);
-        //                }
-        //                if (map._zoom === map.getMaxZoom()) {
-        //                    L.DomUtil.addClass(this._zoomInButton, className);
-        //                }
-        //            }
-        //        });
-        //        // add the new control to the map
-        //        var zoomHome = new L.Control.zoomHome();
-        //        zoomHome.addTo(map);
+
 
         //Below is a JSON object storing all of the locations I have lived in over my life for more than 1 month
 
@@ -505,18 +362,6 @@
                     , "Description": "I lived in Denver CO while I worked as a USPS mail carrier."
                 }
 
-
-
-
-
-
-
-
-
-
-
-
-                
                 , {
                     "Name": "Longmont, CO"
                     , "Lat": 40.16
@@ -524,18 +369,6 @@
                     , "Description": "I was raised in Longmont CO and spend most of my adolescent life there."
             }
 
-
-
-
-
-
-
-
-
-
-
-
-                
                 , {
                     "Name": "Boulder, CO"
                     , "Lat": 40.01
@@ -543,18 +376,6 @@
                     , "Description": "I was born in Boulder CO and lived there for the first 4 years of my life"
             }
 
-
-
-
-
-
-
-
-
-
-
-
-                
                 , {
                     "Name": "Tuscon, AZ"
                     , "Lat": 32.22
@@ -562,18 +383,6 @@
                     , "Description": "I moved to Tuscon AZ with my parents when I was young as my dad found a job there."
             }
 
-
-
-
-
-
-
-
-
-
-
-
-                
                 , {
                     "Name": "Rochester, MN"
                     , "Lat": 44.01
@@ -581,37 +390,13 @@
                     , "Description": "I moved to Rochester MN with my parents when I was young as my dad found a job there."
             }
 
-
-
-
-
-
-
-
-
-
-
-
-                
                 , {
                     "Name": "Vancouver, BC"
                     , "Lat": 49.28
                     , "Lng": -123.12
                     , "Description": "I studied Geography at the  University of BC in Vancouver."
             }
-
-
-
-
-
-
-
-
-
-
-
-
-                
+ 
                 , {
                     "Name": "Williams Lake, BC"
                     , "Lat": 52.14
@@ -619,18 +404,6 @@
                     , "Description": "I moved to Williams Lake for my first GIS internship job with the Forest Service."
             }
 
-
-
-
-
-
-
-
-
-
-
-
-                
                 , {
                     "Name": "Nelson, BC"
                     , "Lat": 49.49
@@ -638,18 +411,6 @@
                     , "Description": "I moved to Nelson BC for second GIS internship job with the Forest Service."
             }
 
-
-
-
-
-
-
-
-
-
-
-
-                
                 , {
                     "Name": "King Salmon AK"
                     , "Lat": 58.68
@@ -657,18 +418,6 @@
                     , "Description": "I worked for the National Park Service in King Salmon doing invasive plant surveys and GIS work."
             }
 
-
-
-
-
-
-
-
-
-
-
-
-                
                 , {
                     "Name": "Edmonton AB"
                     , "Lat": 53.54
@@ -676,18 +425,6 @@
                     , "Description": "I moved to Edmonton AB for my first permanent full time job doing GIS work at an environmental consulting company."
             }
 
-
-
-
-
-
-
-
-
-
-
-
-                
                 , {
                     "Name": "Edmonton AB"
                     , "Lat": 49.24
@@ -695,18 +432,6 @@
                     , "Description": "I lived in Burnaby BC for a summer while I worked for a salmon habitat restoration company in Surrey BC."
             }
 
-
-
-
-
-
-
-
-
-
-
-
-                
                 , {
                     "Name": "Parana Argentina"
                     , "Lat": -31.74
@@ -714,33 +439,8 @@
                     , "Description": "I lived in Parana, Argentina for a summer during highschool where I stayed with a host family and attended a local school to improve my Spanish."
             }
 
-
-
-
-
-
-
-
-
-
-
-                
                 , ]
         };
-
-        var HomeIcon = L.Icon.extend({
-            iconUrl: 'homeicon.png', //            , shadowUrl: 'leaf-shadow.png',
-
-            iconSize: [15, 35], // size of the icon
-            //            shadowSize: [50, 64], // size of the shadow
-            iconAnchor: [15, 94], // point of the icon which will correspond to marker's location
-            //            shadowAnchor: [4, 62], // the same for the shadow
-            popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
-        });
-
-        var thisHome = new HomeIcon({
-            iconUrl: 'homeicon.png'
-        })
 
         L.icon = function (options) {
             return new L.Icon(options);
@@ -752,9 +452,6 @@
             var popupDesc = myHomes.homes[homes].Description
             var popupName = myHomes.homes[homes].Name
             var popupHTML = "<h2>Home Location: " + popupName + "<h3>" + popupDesc
-                //            L.marker([myHomes.homes[homes].Lat, myHomes.homes[homes].Lng], {
-                //                icon: thisHome
-                //            }).addTo(map).bindPopup(popupHTML);
 
             var blueMarker = L.AwesomeMarkers.icon({
                 icon: 'home'
@@ -765,10 +462,6 @@
             L.marker([myHomes.homes[homes].Lat, myHomes.homes[homes].Lng], {
                 icon: blueMarker
             }).addTo(map).bindPopup(popupHTML);
-
-            //                var blueMarker = L.AwesomeMarkers.icon({ icon: 'home' , markerColor: 'green', prefix: 'fa', iconColor: 'black' }); L.marker([49, -97], { icon: blueMarker }).addTo(map);
-
-
 
             var dataLayer, attribute = "year";
         };
@@ -796,28 +489,6 @@
         };
 
         function changeStyle() {
-
-            //            dataLayer.eachLayer(function (layer) {
-            //                console.log(layer.feature.properties.year);
-            //
-            //                if (layer.feature.properties.year === attribute) {
-            //                    layer.setStyle({
-            //                        color: 'yellow'
-            //                        , weight: 6
-            //                        , opacity: 1
-            //
-            //                    })
-            //                    layer.bringToFront();
-            //                } else {
-            //                    layer.setStyle({
-            //                        color: '#5258F9'
-            //                        , weight: 5
-            //                        , opacity: 1
-            //                    })
-            //
-            //                }
-            //
-            //            });
 
             dataLayer.eachLayer(function (layer) {
                 console.log(layer.feature.properties.year);
@@ -914,25 +585,9 @@
 
                     attribute = layer.feature.properties.year;
 
-                    //                    layer.setStyle({
-                    //                        color: 'yellow'
-                    //                        , weight: 6
-                    //                        , opacity: 1
-                    //
-                    //                    })
-                    //                    layer.bringToFront();
-
                     $(".year-slider").val(attribute);
 
                 });
-
-                //                layer.on('mouseout', function () {
-                //                    layer.setStyle({
-                //                        color: '#5258F9'
-                //                        , weight: 4
-                //                        , opacity: 1
-                //                    })
-                //                })
 
             });
 
@@ -969,12 +624,6 @@
 
                     attribute = layer.feature.properties.year;
 
-                    //                    layer.setStyle({
-                    //                        color: 'yellow'
-                    //                        , weight: 6
-                    //                        , opacity: 1
-                    //
-                    //                    })
                     layer.bringToFront();
 
 
@@ -983,12 +632,7 @@
                 });
 
                 layer.on('mouseout', function () {
-                    //                    layer.setStyle({
-                    //                        //                        color: '#949494'
-                    //                        color: '#5258F9'
-                    //                        , weight: 4
-                    //                        , opacity: 1
-                    //                    })
+
                 })
 
             });
@@ -1001,7 +645,6 @@
             });
 
         }
-
 
         function updateInfo(feature) {
 
