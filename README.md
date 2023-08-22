@@ -1,6 +1,6 @@
 # My Roadtrip Diary
 
-This repo is forked from my old school account and was my New Maps Plus project. Some link rot needs to be fixed to restore map background tiles. 
+This repo is forked from my old school account and was my New Maps Plus project. Some link rot needs to be fixed to restore map slider and info bar. 
 
 This map is a spatial diary of roads I have travelled on through the course of my life. It is intended to serve as a spatial auto-biography.
 
